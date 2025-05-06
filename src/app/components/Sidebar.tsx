@@ -21,19 +21,19 @@ const menuItems = [
     subTitle: 'Search through our solutions.'
   },
   {
-    path: '/dashboard/counter',
+    path: '/dashboard/see',
     icon: <IoIosSearch size={40}/>,
     title: 'See product',
     subTitle: 'Find a specific product.'
   },
   {
-    path: '/dashboard/pokemons',
+    path: '/dashboard/cart',
     icon: <FiShoppingCart size={40} />,
     title: 'Shopping cart',
     subTitle: ''
   },
   {
-    path: '/dashboard/toy',
+    path: '/dashboard/us',
     icon: <FcAbout size={40} />,
     title: 'About Us',
     subTitle: 'Take a look at our history and our team.'
