@@ -1,17 +1,16 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { FaUserSecret } from "react-icons/fa"
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [isLogin, setIsLogin] = useState(true)
   const router = useRouter()
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    console.log("Enviando datos:", email, password)
     const res = await fetch(`/api/${isLogin ? 'login' : 'register'}`, {
       method: 'POST',
       headers: {
@@ -19,21 +18,37 @@ export default function LoginPage() {
       },
       body: JSON.stringify({ email, password })
     })
-
+    console.log("Respuesta recibida:", res.status)
     if (res.ok) {
-      router.push('/dashboard/main') // redirige a productos
+      console.log("Exito! --", res)
+      setErrorMessage('')
+      router.push('/dashboard/main')
     } else {
-      alert('Error: ' + (await res.text()))
+      console.log("Fracaso! --", res)
+      if (res.status === 409) {
+        setErrorMessage('Este correo electrónico ya está registrado.')
+        setTimeout(() => {
+          setErrorMessage('')
+          setEmail('')
+          setPassword('')
+        }, 5000)
+      } else {
+        setErrorMessage('Ocurrió un error. Intenta de nuevo.')
+        setTimeout(() => {
+          setErrorMessage('')
+          setEmail('')
+          setPassword('')
+        }, 5000)
+      }
     }
   }
-
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img 
-          className="mx-auto h-10 w-auto" 
-          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" 
-          alt="Your Company" 
+        <img
+          className="mx-auto h-10 w-auto"
+          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+          alt="Your Company"
         />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           {isLogin ? 'Sign in to your account' : 'Create a new account'}
@@ -41,6 +56,11 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {errorMessage && (
+          <div className="mb-4 text-sm text-red-600 font-medium text-center">
+            {errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
@@ -98,7 +118,12 @@ export default function LoginPage() {
         <p className="mt-10 text-center text-sm text-gray-500">
           {isLogin ? 'Not a member?' : 'Already have an account?'}{' '}
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin)
+              setEmail('')
+              setPassword('')
+              setErrorMessage('')
+            }}
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
             {isLogin ? 'Create account' : 'Login here'}

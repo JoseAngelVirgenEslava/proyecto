@@ -1,20 +1,30 @@
-import mongoose from 'mongoose'
+// lib/mongodb.ts
+import { MongoClient } from 'mongodb'
 
-const MONGODB_URI = process.env.MONGODB_URI as string
+const uri = process.env.MONGODB_URI
+const options = {}
 
-if (!MONGODB_URI) {
-  throw new Error('Debes definir MONGODB_URI en .env.local')
+if (!uri) {
+  throw new Error('Por favor define la variable MONGODB_URI en .env.local')
 }
 
-let cached = (global as any).mongoose || { conn: null, promise: null }
+// Agrega esta línea para evitar error de tipado:
+let client: MongoClient
+let clientPromise: Promise<MongoClient>
 
-export async function connectDB() {
-  if (cached.conn) return cached.conn
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      dbName: 'tienda',
-    }).then((mongoose) => mongoose)
+declare global {
+  var _mongoClientPromise: Promise<MongoClient> | undefined
+}
+
+if (process.env.NODE_ENV === 'development') {
+  if (!global._mongoClientPromise) {
+    client = new MongoClient(uri, options)
+    global._mongoClientPromise = client.connect()
   }
-  cached.conn = await cached.promise
-  return cached.conn
+  clientPromise = global._mongoClientPromise!
+} else {
+  client = new MongoClient(uri, options)
+  clientPromise = client.connect()
 }
+
+export default clientPromise

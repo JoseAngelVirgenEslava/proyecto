@@ -1,24 +1,45 @@
 import { NextResponse } from 'next/server'
+import clientPromise from '@/lib/mongodb'
 import bcrypt from 'bcryptjs'
-import { connectDB } from '@/lib/mongodb'
-import User from '@/models/User'
+
+export async function GET() {
+  console.log("GET /api/register fue llamado")
+  return NextResponse.json({ message: "El endpoint existe y acepta GET" })
+}
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json()
-  console.log('Intentando registrar:', email)
+  console.log("POST /api/register fue llamado")
 
-  await connectDB()
-  console.log('Conectado a la base de datos')
+  try {
+    const body = await req.json()
+    console.log("Datos recibidos:", body)
 
-  const userExists = await User.findOne({ email })
-  if (userExists) {
-    console.log('Usuario ya existe')
-    return NextResponse.json({ message: 'Usuario ya existe' }, { status: 400 })
+    const { email, password } = body
+    if (!email || !password) {
+      console.warn("Campos faltantes")
+      return NextResponse.json({ error: 'Faltan campos' }, { status: 400 })
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = {
+      email,
+      password: hashedPassword,
+      createdAt: new Date(),
+    };
+    const client = await clientPromise
+    const database = client.db('tienda')
+    const coleccion = database.collection('usuarios')
+    const user = await coleccion.findOne({email})
+    if (user) {
+      console.warn("Usuario ya existe")
+      return NextResponse.json({ error: 'Usuario ya existe' }, { status: 409 })
+    } else {
+      coleccion.insertOne(newUser)
+      return NextResponse.json({ message: "Usuario agregado correctamente" }, {status: 200})
+    }
+
+  } catch (err: any) {
+    console.error("Error en POST:", err.message)
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10)
-  const user = await User.create({ email, password: hashedPassword })
-  console.log('Usuario creado:', user)
-
-  return NextResponse.json({ message: 'Usuario creado', user })
 }
