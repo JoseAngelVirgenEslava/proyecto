@@ -1,34 +1,20 @@
 'use client'
 
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useSession, signOut } from "next-auth/react"
 import { useRouter } from 'next/navigation'
-import { onAuthStateChanged, signOut, getAuth, User } from 'firebase/auth'
 import { IoBrowsersOutline, IoCalculator } from 'react-icons/io5'
 import { IoIosGlobe, IoIosSearch } from "react-icons/io"
 import { FaRegUserCircle } from "react-icons/fa"
 import { FiShoppingCart } from "react-icons/fi"
 import { FcAbout } from "react-icons/fc"
 import { SidebarMenuItem } from './SidebarMenuItem'
-import { app } from '@/lib/firebase'  // Asegúrate que este path sea correcto
-
-const auth = getAuth(app)
 
 export const Sidebar = () => {
-  const [user, setUser] = useState<User | null>(null)
+  const { data: session, status } = useSession() // Usar el hook useSession de NextAuth
   const router = useRouter()
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser)
-    })
-
-    return () => unsubscribe()
-  }, [])
-
   const handleLogout = async () => {
-    await signOut(auth)
-    setUser(null)
+    await signOut()  // Usar signOut de NextAuth
     router.push('/dashboard/login')
   }
 
@@ -75,8 +61,8 @@ export const Sidebar = () => {
       <div id="profile" className="px-6 py-10">
         <p className="text-slate-500">Welcome,</p>
         {
-          user ? (
-            <p className="text-white font-semibold">{user.email}</p>
+          session ? (
+            <p className="text-white font-semibold">{session.user?.email}</p>
           ) : (
             <p className="text-white font-semibold">Guest</p>
           )
@@ -86,7 +72,7 @@ export const Sidebar = () => {
       <div id="nav" className="w-full px-6">
 
         {
-          !user ? (
+          !session ? (
             <SidebarMenuItem
               path="/dashboard/login"
               icon={<FaRegUserCircle size={40} />}

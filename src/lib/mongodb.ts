@@ -1,4 +1,3 @@
-// lib/mongodb.ts
 import { MongoClient } from 'mongodb'
 
 const uri = process.env.MONGODB_URI
@@ -8,7 +7,6 @@ if (!uri) {
   throw new Error('Por favor define la variable MONGODB_URI en .env.local')
 }
 
-// Agrega esta línea para evitar error de tipado:
 let client: MongoClient
 let clientPromise: Promise<MongoClient>
 
