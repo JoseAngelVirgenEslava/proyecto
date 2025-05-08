@@ -10,8 +10,8 @@ import { FcAbout } from "react-icons/fc"
 import { SidebarMenuItem } from './SidebarMenuItem'
 
 export const Sidebar = () => {
-  const { data: session, status } = useSession() // Usar el hook useSession de NextAuth
-  const router = useRouter()
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   const handleLogout = async () => {
     await signOut()  // Usar signOut de NextAuth
