@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Image from 'next/image';
 
 interface Product {
@@ -20,13 +20,16 @@ interface ElementProps {
     onAddToCart?: (product: Product) => void;
 }
 
-export const Element: React.FC<ElementProps> = ({
+export const Element = forwardRef<HTMLDivElement, ElementProps>(({
     product,
     className = '',
     onAddToCart
-}) => {
+}, ref) => {
     return (
-        <div className={`group relative bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl ${className}`}>
+        <div
+            ref={ref} // Aplicamos la ref al div principal
+            className={`group relative bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl w-64 ${className}`}
+        >
             {/* Imagen del producto */}
             <div className="aspect-square w-full overflow-hidden rounded-t-lg bg-gray-200">
                 <img
@@ -44,28 +47,25 @@ export const Element: React.FC<ElementProps> = ({
                 ></Image>
             </div>
 
-            <div className="p-4">
-                <div className="flex justify-between items-start">
-                    <h3 className="text-sm text-gray-700">
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                    </h3>
-                    <p className="text-sm font-medium text-gray-900">
-                        {product.short_description}
-                    </p>
-                </div>
-                <p className="text-sm font-medium text-gray-900">
-                    ${product.price.toFixed(2)}
+            <div className="p-4 flex flex-col">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    {product.name}
+                </h3>
+                <p className="text-sm text-gray-700 mb-1">
+                    {product.short_description}
                 </p>
-                <p className="text-sm font-medium text-gray-900">
-                    {product.units}
+                <p className="text-sm font-medium text-gray-900 mb-1">
+                    Precio: ${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <p className="text-sm font-medium text-gray-900">
-                    {product.category}
+                <p className="text-sm font-medium text-gray-900 mb-1">
+                    Unidades disponibles: {product.units}
+                </p>
+                <p className="text-sm font-medium text-gray-900 mb-2">
+                    Categoría: {product.category}
                 </p>
 
                 {/* Botón de acción */}
-                <div className="mt-4 flex justify-end">
+                <div className="mt-auto flex justify-end">
                     <button
                         onClick={() => onAddToCart?.(product)}
                         className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
@@ -76,4 +76,6 @@ export const Element: React.FC<ElementProps> = ({
             </div>
         </div>
     );
-};
+});
+
+Element.displayName = 'Element';

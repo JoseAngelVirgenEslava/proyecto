@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'www.infodefensa.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'yaffa-cdn.s3.amazonaws.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'tanknutdave.com'
       }
     ]
   }
