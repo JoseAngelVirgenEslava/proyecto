@@ -36,12 +36,6 @@ export const Sidebar = () => {
       icon: <FiShoppingCart size={40} />,
       title: 'Shopping cart',
       subTitle: ''
-    },
-    {
-      path: '/dashboard/us',
-      icon: <FcAbout size={40} />,
-      title: 'About Us',
-      subTitle: 'Take a look at our history and our team.'
     }
   ]
 
