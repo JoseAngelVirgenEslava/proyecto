@@ -5,7 +5,6 @@ import { Element } from '@/app/components/Element';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// ... (tus interfaces Product, CartItem, FilterOptions y el resto del componente MainPage se mantienen igual) ...
 interface Product {
     _id: string;
     name: string;
@@ -217,7 +216,7 @@ export default function MainPage() {
                 try {
                     const parsed = JSON.parse(storedCart);
                     if (Array.isArray(parsed)) cart = parsed;
-                } catch (e) { /* ignore */ }
+                } catch (e) {}
             }
         }
         const existingItemIndex = cart.findIndex(item => item._id === product._id);
@@ -238,7 +237,6 @@ export default function MainPage() {
         }
     };
 
-    // JSX
     if (loading && page === 1 && !initialFetchDone.current) {
         return <div className="text-center p-8 text-xl">Cargando productos iniciales...</div>;
     }
@@ -248,7 +246,7 @@ export default function MainPage() {
             <ToastContainer newestOnTop autoClose={3000} hideProgressBar={false} />
             <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
                 <div className="mb-8 flex flex-col sm:flex-row items-stretch sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
-                    {/* Selectores de filtro */}
+                    
                     <div className="w-full sm:w-auto">
                         <label htmlFor="category" className="block text-sm font-medium text-gray-700">Categoría:</label>
                         <select
@@ -283,7 +281,6 @@ export default function MainPage() {
 
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-6">Productos disponibles</h2>
 
-                {/* Log de productos ANTES de mapear */}
                 {(() => {
                     if (products.length > 0) {
                         console.log("MainPage - Productos en estado listos para mapear:", JSON.parse(JSON.stringify(products)));

@@ -7,8 +7,8 @@ interface CartItem {
     _id: string;
     name: string;
     price: number;
-    img: string; // Aunque no se use directamente en el resumen del modal, es parte del tipo
-    units: number; // Igual que img
+    img: string;
+    units: number;
     quantity: number;
 }
 
@@ -73,7 +73,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
                 <div className="flex flex-col items-center text-center mb-6">
                     <CheckCircleIcon className="w-20 h-20 text-green-500 mb-3" />
-                    {/* La "flecha enmarcada en verde" se interpreta como un icono de éxito */}
                 </div>
 
                 <p className="text-sm text-gray-600 text-center px-2">

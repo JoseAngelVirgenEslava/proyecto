@@ -14,7 +14,7 @@ export const Sidebar = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut()  // Usar signOut de NextAuth
+    await signOut()
     router.push('/dashboard/login')
   }
 

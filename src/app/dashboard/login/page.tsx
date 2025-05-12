@@ -35,7 +35,7 @@ export default function LoginPage() {
       }
     } else {
       console.log("Enviando datos de registro:", email, password)
-      const res = await fetch(`/api/register`, { // Ruta de tu API de registro
+      const res = await fetch(`/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

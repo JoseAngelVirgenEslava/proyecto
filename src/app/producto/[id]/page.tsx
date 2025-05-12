@@ -17,13 +17,13 @@ interface Product {
     img: string;
 }
 
-interface CartItem extends Product { // Para la función handleAddToCart
+interface CartItem extends Product {
     quantity: number;
 }
 
 export default function ProductDetailPage() {
-    const params = useParams(); // Hook para obtener los parámetros de la ruta (ej. el id)
-    const router = useRouter(); // Hook para la navegación (ej. para el botón "volver")
+    const params = useParams(); // Hook para obtener los parámetros de la ruta
+    const router = useRouter(); // Hook para la navegación
     const productId = params.id as string; // 'id' coincide con el nombre de la carpeta [id]
 
     const [product, setProduct] = useState<Product | null>(null);
@@ -133,14 +133,14 @@ export default function ProductDetailPage() {
 
                 <article className="bg-white shadow-xl rounded-lg overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-2">
-                        <div className="relative w-full h-64 md:h-auto md:min-h-[400px] lg:min-h-[500px]"> {/* Altura mínima para md y lg */}
+                        <div className="relative w-full h-64 md:h-auto md:min-h-[400px] lg:min-h-[500px]">
                             <Image
                                 src={product.img}
                                 alt={product.name}
                                 fill
-                                style={{ objectFit: 'contain' }} // 'contain' para ver la imagen completa, 'cover' para llenar
-                                className="bg-gray-100" // Fondo mientras carga o si la imagen no cubre
-                                priority // Considera 'true' ya que es la imagen principal de la página
+                                style={{ objectFit: 'contain' }}
+                                className="bg-gray-100"
+                                priority
                             />
                         </div>
 
@@ -161,7 +161,7 @@ export default function ProductDetailPage() {
                                 {product.units > 0 ? ` ${product.units}` : <span className="text-red-500 font-semibold"> Agotado</span>}
                             </div>
                             
-                            <div className="mt-auto"> {/* Empuja el precio y botón hacia abajo */}
+                            <div className="mt-auto">
                                 <p className="text-3xl font-bold text-indigo-600 mb-6">
                                     ${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </p>

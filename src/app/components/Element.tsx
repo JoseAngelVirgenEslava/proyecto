@@ -1,4 +1,3 @@
-// app/components/Element.tsx
 'use client';
 
 import React, { forwardRef } from 'react';
@@ -32,14 +31,13 @@ export const Element = forwardRef<HTMLDivElement, ElementProps>(({
 
     const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
-        if (product) { // Asegurarse que product no sea null o undefined
+        if (product) {
             onAddToCart?.(product);
         } else {
             console.error("Element.tsx - onAddToCart_called_with_null_product");
         }
     };
 
-    // Try-catch para capturar errores de renderizado dentro de este componente
     try {
         if (!product || typeof product._id === 'undefined') {
             console.error("Element.tsx - Producto inválido o sin _id, no se renderizará:", product);
@@ -47,11 +45,9 @@ export const Element = forwardRef<HTMLDivElement, ElementProps>(({
         }
         if (!product.name) {
              console.warn("Element.tsx - Producto sin nombre:", product);
-             // Podrías retornar un placeholder o un mensaje de error si es crítico
         }
         if (!product.img) {
             console.warn("Element.tsx - Producto sin imagen (img):", product);
-            // Considera un placeholder si la imagen es opcional o si esto es un error
         }
 
 
@@ -61,7 +57,7 @@ export const Element = forwardRef<HTMLDivElement, ElementProps>(({
                 className={`relative bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl w-64 ${className}`}
             >
                 <Link
-                    href={`/producto/${product._id}`} // Asegúrate que product._id es un string válido para URL
+                    href={`/producto/${product._id}`}
                     className="block group cursor-pointer"
                 >
                     <div className="aspect-square w-full overflow-hidden rounded-t-lg bg-gray-200">
@@ -74,9 +70,6 @@ export const Element = forwardRef<HTMLDivElement, ElementProps>(({
                             priority={false}
                             onError={(e) => {
                                 console.error(`Element.tsx - Error al cargar imagen para ${product.name} (ID: ${product._id}): ${product.img}`, e);
-                                // Opcional: cambiar la fuente de la imagen a un placeholder si falla la carga
-                                // e.currentTarget.srcset = "https://placehold.co/256x256/E0E0E0/BDBDBD?text=Error+Img";
-                                // e.currentTarget.src = "https://placehold.co/256x256/E0E0E0/BDBDBD?text=Error+Img";
                             }}
                         />
                     </div>
